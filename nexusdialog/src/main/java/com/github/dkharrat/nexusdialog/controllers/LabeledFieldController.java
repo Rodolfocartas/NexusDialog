@@ -128,6 +128,12 @@ public abstract class LabeledFieldController extends FormElementController {
         FrameLayout container = (FrameLayout)view.findViewById(R.id.field_container);
         container.addView(getFieldView());
 
+        view.setVisibility(this.isVisible() ? View.VISIBLE : View.GONE);
+
         return view;
+    }
+
+    protected void refreshUIEnabled(boolean enabled) {
+        fieldView.setEnabled(enabled);
     }
 }

@@ -33,10 +33,22 @@ public class FormSectionController extends FormElementController {
      * @param ctx   the Android context
      * @param name  the name of the section
      * @param title the title of the section to display
+     * @param visible the section visibility
+     */
+    public FormSectionController(Context ctx, String name, String title, boolean visible) {
+        super(ctx, name, visible);
+        this.title = title;
+    }
+
+    /**
+     * Creates a new instance of a form section with a specified name and title.
+     *
+     * @param ctx   the Android context
+     * @param name  the name of the section
+     * @param title the title of the section to display
      */
     public FormSectionController(Context ctx, String name, String title) {
-        super(ctx, name);
-        this.title = title;
+        this(ctx, name, title, true);
     }
 
     /**
@@ -79,6 +91,7 @@ public class FormSectionController extends FormElementController {
         if (elements.containsKey(element.getName())) {
             throw new IllegalArgumentException("Element with that name already exists");
         } else {
+            element.setVisible(isVisible());
             elements.put(element.getName(), element);
             orderedElements.add(element);
             return element;
@@ -174,11 +187,36 @@ public class FormSectionController extends FormElementController {
             view = layoutInflater.inflate(R.layout.separator, null);
         }
 
+        view.setVisibility(isVisible() ? View.VISIBLE : View.GONE);
+
         return view;
     }
 
     @Override
     public void refresh() {
+        for (FormElementController element : orderedElements) {
+            element.refresh();
+        }
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        for (FormElementController element : orderedElements) {
+            element.setVisible(visible);
+        }
+        super.setVisible(visible);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        for (FormElementController element : orderedElements) {
+            element.setEnabled(enabled);
+        }
+        super.setEnabled(enabled);
+    }
+
+    @Override
+    protected void refreshUIEnabled(boolean enabled) {
         for (FormElementController element : orderedElements) {
             element.refresh();
         }

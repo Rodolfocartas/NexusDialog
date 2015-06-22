@@ -176,4 +176,5 @@ public class EditTextController extends LabeledFieldController {
     public void refresh() {
         refresh(getEditText());
     }
+
 }

@@ -12,6 +12,8 @@ public abstract class FormElementController {
     private final String name;
     private FormModel model;
     private View view;
+    private boolean visible;
+    private boolean enabled;
 
     /**
      * Constructs a new instance with the specified name.
@@ -20,8 +22,32 @@ public abstract class FormElementController {
      * @param name  the name of this instance
      */
     protected FormElementController(Context ctx, String name) {
+        this(ctx, name, true);
+    }
+
+    /**
+     * Constructs a new instance with the specified name.
+     *
+     * @param ctx   the Android context
+     * @param name  the name of this instance
+     * @param visible visibility flag
+     */
+    protected FormElementController(Context ctx, String name, boolean visible) {
+        this(ctx, name, visible, true);
+    }
+
+    /**
+     * Constructs a new instance with the specified name.
+     *
+     * @param ctx   the Android context
+     * @param name  the name of this instance
+     * @param visible visibility flag
+     */
+    protected FormElementController(Context ctx, String name, boolean visible, boolean enabled) {
         this.context = ctx;
         this.name = name;
+        this.visible = visible;
+        this.enabled = enabled;
     }
 
     /**
@@ -87,4 +113,31 @@ public abstract class FormElementController {
      * Refreshes the view of this element to reflect current model.
      */
     public abstract void refresh();
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    /**
+     * Sets the element visibility
+     *
+     * @param visible
+     */
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+        if(view != null) {
+            view.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        refreshUIEnabled(enabled);
+    }
+
+    protected abstract void refreshUIEnabled(boolean enabled);
 }
